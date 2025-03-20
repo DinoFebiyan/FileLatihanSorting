@@ -1,62 +1,66 @@
 import 'dart:io'; // Import library untuk input/output
-import 'dart:math'; // Import library untuk fungsi matematika, seperti Random
 
 void main() {
-  // Membuat list dengan 100 angka acak antara 0 dan 999
-  List<int> numbers = List.generate(100, (index) => Random().nextInt(1000));
+  // Membuat list dengan 100 angka acak
+  List<int> data = List<int>.generate(100, (index)=>(index + 1)); //generate untuk membuat list dengan 100 angka, index+1 untuk membuat angka dari 1-100
+  data.shuffle(); //mengacak angka
   
   // Menampilkan menu pilihan algoritma sorting
-  print('ALGORITMA SORTING');
-  print('1. Insertion');
-  print('2. Selection');
-  print('3. Bubble');
-  print('4. Shell');
-  print('5. Quick');
-  print('6. Merge');
+  print('ALGORITMA SORTING');//judul
+  print('1. Insertion');//sortir dengan insertion
+  print('2. Selection');//sortir dengan selection
+  print('3. Bubble');//sortir dengan bubble
+  print('4. Shell');//sortir dengan shell
+  print('5. Quick');//sortir dengan quick
+  print('6. Merge');//sortir dengan merge
   stdout.write('Pilihan : '); // Meminta input dari pengguna
-  int choice = int.parse(stdin.readLineSync()!); // Membaca input pilihan algoritma
+  int pilihan = int.parse(stdin.readLineSync()!); // Membaca input pilihan algoritma dari pengguna
 
   // Menampilkan menu pilihan urutan (ascending atau descending)
-  print('\n1. Ascending');
+  print('\n1. Ascending');//\n digunakan untuk membuat baris baru
   print('2. Descending');
-  stdout.write('Pilihan : ');
-  int order = int.parse(stdin.readLineSync()!); // Membaca input urutan
-
-  Stopwatch stopwatch = Stopwatch()..start(); // Memulai stopwatch untuk mengukur waktu eksekusi
+  stdout.write('Pilihan : ');//membaca input pilihan urutan dari pengguna
+  int mode = int.parse(stdin.readLineSync()!); // Membaca input
+  
+  print('Data Sebelum Pengurutan: $data');//menampilkan data sebelum diurutkan)
+  DateTime start = DateTime.now(); // Memulai penghitungan untuk mengukur waktu eksekusi
 
   // Switch case untuk memilih algoritma sorting berdasarkan input pengguna
-  switch (choice) {
+  // Saua menggunakan swift case karena meminta pilihan input dari pengguna berdasarkan pilihan yang berbeda
+  // Data pada case 1,2,3,4,5,6 adalah algoritma sorting yang akan digunakan yang diperoleh dari pengacakan angka sebelumya
+  switch (pilihan) {
     case 1:
-      insertionSort(numbers, order == 1); // Memanggil fungsi insertionSort
-      break;
+      insertionSort(data, mode == 1); // Memanggil fungsi insertionSort, mode == 1 digunakan untuk menentukan urutan ascending atau descending. misal mode == 1 maka akan ascending sedangkan jika ordwr != 1 maka akan descending
+      break;//menghentikan switch case
     case 2:
-      selectionSort(numbers, order == 1); // Memanggil fungsi selectionSort
+      selectionSort(data, mode == 1); // Memanggil fungsi selectionSort
       break;
     case 3:
-      bubbleSort(numbers, order == 1); // Memanggil fungsi bubbleSort
+      bubbleSort(data, mode == 1); // Memanggil fungsi bubbleSort
       break;
     case 4:
-      shellSort(numbers, order == 1); // Memanggil fungsi shellSort
+      shellSort(data, mode == 1); // Memanggil fungsi shellSort
       break;
     case 5:
-      quickSort(numbers, 0, numbers.length - 1, order == 1); // Memanggil fungsi quickSort
+      quickSort(data, 0, data.length - 1, mode == 1); // Memanggil fungsi quickSort, 0 dan numbers.length - 1 digunakan untuk menentukan elemen pertama dan elemen terakhir dalam array yang akan diurutkan. karena sorting menggunakan quick sort
       break;
     case 6:
-      mergeSort(numbers, 0, numbers.length - 1, order == 1); // Memanggil fungsi mergeSort
+      mergeSort(data, 0, data.length - 1, mode == 1); // Memanggil fungsi mergeSort, 0 dan numbers.length - 1 digunakan untuk menentukan elemen pertama dan elemen terakhir dalam array yang akan diurutkan. karena sorting menggunakan merge sort
       break;
   }
 
-  stopwatch.stop(); // Menghentikan stopwatch
-  print('Waktu : ${stopwatch.elapsedMilliseconds} ms'); // Menampilkan waktu eksekusi
-  print('Hasil : $numbers'); // Menampilkan hasil pengurutan
+  Duration elapsedTime = DateTime.now().difference(start); // Menghentikan penghitungan waktu eksekusi
+  print('data setelah diurutkan menggunakan $pilihan : $data'); // Menampilkan hasil pengurutan
+  print('Waktu: ${elapsedTime.inMilliseconds} ms'); // Menampilkan waktu eksekusi dalam milidetik
 }
 
+// Fungsi fungsi insertionSort, selectionSort, bubbleSort, shellSort, quickSort, dan mergeSort
 // Fungsi insertionSort untuk mengurutkan list menggunakan algoritma Insertion Sort
 void insertionSort(List<int> arr, bool ascending) {
-  for (int i = 1; i < arr.length; i++) {
+  for (int i = 1; i < arr.length; i++) { // Memulai perulangan dari elemen kedua hingga elemen terakhir
     int key = arr[i]; // Menyimpan elemen yang akan dipindahkan
-    int j = i - 1;
-    if (ascending) {
+    int j = i - 1; // Menyimpan indeks j yaitu elemen sebelum elemen yang akan dipindahkan
+    if (ascending) { // pilihan berdasarkan mode == 1 yaituu ascending
       // Jika ascending, geser elemen yang lebih besar dari key ke kanan
       while (j >= 0 && arr[j] > key) {
         arr[j + 1] = arr[j];
@@ -76,27 +80,27 @@ void insertionSort(List<int> arr, bool ascending) {
 // Fungsi selectionSort untuk mengurutkan list menggunakan algoritma Selection Sort
 void selectionSort(List<int> arr, bool ascending) {
   for (int i = 0; i < arr.length - 1; i++) {
-    int extremeIndex = i; // Menyimpan indeks elemen terkecil/terbesar
+    int indeks = i; // Menyimpan indeks elemen terkecil/terbesar
     for (int j = i + 1; j < arr.length; j++) {
       if (ascending) {
         // Jika ascending, cari elemen terkecil
-        if (arr[j] < arr[extremeIndex]) extremeIndex = j;
+        if (arr[j] < arr[indeks]) indeks = j;
       } else {
         // Jika descending, cari elemen terbesar
-        if (arr[j] > arr[extremeIndex]) extremeIndex = j;
+        if (arr[j] > arr[indeks]) indeks = j;
       }
     }
     // Tukar elemen terkecil/terbesar dengan elemen pada posisi i
     int temp = arr[i];
-    arr[i] = arr[extremeIndex];
-    arr[extremeIndex] = temp;
+    arr[i] = arr[indeks];
+    arr[indeks] = temp;
   }
 }
 
 // Fungsi bubbleSort untuk mengurutkan list menggunakan algoritma Bubble Sort
 void bubbleSort(List<int> arr, bool ascending) {
   for (int i = 0; i < arr.length - 1; i++) {
-    for (int j = 0; j < arr.length - i - 1; j++) {
+    for (int j = 0; j < arr.length - i - 1; j++) { // Perulangan untuk membandingkan elemen-elemen dalam array
       if (ascending) {
         // Jika ascending, tukar jika elemen saat ini lebih besar dari elemen berikutnya
         if (arr[j] > arr[j + 1]) {
@@ -118,18 +122,18 @@ void bubbleSort(List<int> arr, bool ascending) {
 
 // Fungsi shellSort untuk mengurutkan list menggunakan algoritma Shell Sort
 void shellSort(List<int> arr, bool ascending) {
-  for (int gap = arr.length ~/ 2; gap > 0; gap ~/= 2) { // Menentukan gap
+  for (int gap = arr.length ~/ 2; gap > 0; gap ~/= 2) { // Menentukan gap, dimulai dari setengah panjang array
     for (int i = gap; i < arr.length; i++) {
       int temp = arr[i]; // Menyimpan elemen yang akan dipindahkan
       int j;
       if (ascending) {
         // Jika ascending, geser elemen yang lebih besar dari temp ke kanan
-        for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
+        for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) { // Menggeser elemen-elemen yang lebih besar dari temp ke kanan
           arr[j] = arr[j - gap];
         }
       } else {
         // Jika descending, geser elemen yang lebih kecil dari temp ke kanan
-        for (j = i; j >= gap && arr[j - gap] < temp; j -= gap) {
+        for (j = i; j >= gap && arr[j - gap] < temp; j -= gap) { // Menggeser elemen-elemen yang lebih kecil dari temp ke kanan
           arr[j] = arr[j - gap];
         }
       }
@@ -139,20 +143,20 @@ void shellSort(List<int> arr, bool ascending) {
 }
 
 // Fungsi quickSort untuk mengurutkan list menggunakan algoritma Quick Sort
-void quickSort(List<int> arr, int low, int high, bool ascending) {
-  if (low < high) {
-    int pi = partition(arr, low, high, ascending); // Partisi array
-    quickSort(arr, low, pi - 1, ascending); // Rekursif pada bagian kiri
-    quickSort(arr, pi + 1, high, ascending); // Rekursif pada bagian kanan
+void quickSort(List<int> arr, int left, int right, bool ascending) {
+  if (left < right) {
+    int pi = partition(arr, left, right, ascending); // Partisi array
+    quickSort(arr, left, pi - 1, ascending); // Rekursif pada bagian kiri
+    quickSort(arr, pi + 1, right, ascending); // Rekursif pada bagian kanan
   }
 }
 
 // Fungsi partition untuk membagi array dalam Quick Sort
-int partition(List<int> arr, int low, int high, bool ascending) {
-  int pivot = arr[high]; // Pilih pivot sebagai elemen terakhir
-  int i = low - 1; // Indeks untuk elemen yang lebih kecil dari pivot
+int partition(List<int> arr, int left, int right, bool ascending) {
+  int pivot = arr[right]; // Pilih pivot dari elemen terakhir
+  int i = left - 1; // Indeks untuk elemen yang lebih kecil dari pivot
   
-  for (int j = low; j < high; j++) {
+  for (int j = left; j < right; j++) {
     if (ascending) {
       // Jika ascending, pindahkan elemen yang lebih kecil dari pivot ke kiri
       if (arr[j] <= pivot) {
@@ -167,17 +171,17 @@ int partition(List<int> arr, int low, int high, bool ascending) {
       }
     }
   }
-  swap(arr, i + 1, high); // Pindahkan pivot ke posisi yang benar
+  swap(arr, i + 1, right); // Pindahkan pivot ke posisi yang benar
   return i + 1; // Kembalikan indeks pivot
 }
 
 // Fungsi mergeSort untuk mengurutkan list menggunakan algoritma Merge Sort
 void mergeSort(List<int> arr, int left, int right, bool ascending) {
   if (left < right) {
-    int middle = (left + right) ~/ 2; // Temukan titik tengah
-    mergeSort(arr, left, middle, ascending); // Rekursif pada bagian kiri
-    mergeSort(arr, middle + 1, right, ascending); // Rekursif pada bagian kanan
-    merge(arr, left, middle, right, ascending); // Gabungkan dua bagian
+    int middle = (left + right) ~/ 2; // menentuksn nilai tengah, ~/ untuk membulatkan ke bawah dan /2 untuk membagi
+    mergeSort(arr, left, middle, ascending); // perulangan untuk bagian kiri
+    mergeSort(arr, middle + 1, right, ascending); // perulangan untuk bagian kanan
+    merge(arr, left, middle, right, ascending); // menggabungkan kedua bagian kembali
   }
 }
 
@@ -186,8 +190,8 @@ void merge(List<int> arr, int left, int middle, int right, bool ascending) {
   int n1 = middle - left + 1; // Ukuran bagian kiri
   int n2 = right - middle; // Ukuran bagian kanan
   
-  List<int> L = List<int>.filled(n1, 0); // Buat array untuk bagian kiri
-  List<int> R = List<int>.filled(n2, 0); // Buat array untuk bagian kanan
+  List<int> L = List<int>.filled(n1, 0); // membuat array untuk bagian kiri
+  List<int> R = List<int>.filled(n2, 0); // membuat array untuk bagian kanan
   
   for (int i = 0; i < n1; i++) L[i] = arr[left + i]; // Salin data ke bagian kiri
   for (int j = 0; j < n2; j++) R[j] = arr[middle + 1 + j]; // Salin data ke bagian kanan
