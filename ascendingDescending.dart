@@ -78,11 +78,11 @@ void main() {
   int mode =
       int.parse(input ?? '1'); // Mengubah string menjadi angka, kalo null pake 1
 
-  // membuat array dengan 10 angka genap (2,4,6,8,dst) lalu diacak
-  List<int> data = List<int>.generate(10, (index) => (index + 1) * 2);
+  // membuat array dengan 100 angka lalu mengacaknya
+  List<int> data = List<int>.generate(100, (index) => (index + 1));
   data.shuffle();//menacakk array
 
-  // Print array sebelum diurutin
+  // Print array sebelum diurutkan
   print('Data Sebelum Pengurutan:');
   display(data);
 
