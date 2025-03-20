@@ -1,29 +1,60 @@
 import 'dart:io';
 
-// Fungsi untuk mengurutkan list secara ascending (dari kecil ke besar)
-// Menggunakan generic type T yang extends Comparable untuk memastikan elemen dapat dibandingkan
-void shellSortAscending<T extends Comparable<T>>(List<T> arr) {
-  int i, jarak;
-  bool didSwap = true; // Penanda apakah terjadi pertukaran
-  T temp;
-  jarak = arr.length; // Inisialisasi jarak dengan panjang array
-  
+// Dibawah ini adalah fungsi untuk mengurutkan angka dari bilangan terkecil ke terbesar dengan menggunakan metode shell sort
+// Cara kerjanya mirip seperti bubble sort tetapi memakai jarak
+void shellSortAscending(List<int> arr) {
+  int i, jarak; // i adalah index, jarak untuk menentukan besaran jarak(misal jaraknya adalah setengah dari panjang array)
+  bool didSwap =//boolean untuk mengecek apakah ada yang ditukar atau tidak
+      true; // bagian ini untuk mengecek apakah masih ada yang ditukar atau tidak
+  int temp; // variabel sementara untuk menukar nilai
+  jarak = arr.length; // awalnya jarak sama dengan panjang array
+
   while (jarak > 1) {
-    // Mengurangi jarak dengan membagi 2 dan dibulatkan ke bawah
-    jarak = (jarak / 2).floor();
+    // selama jarak masih lebih dari 1
+    jarak = (jarak ~/ 2); // jaraknya dibagi 2 (pakai ~/ agar hasilnya bulat)
+    didSwap = true; // reset flag ditukar jadi true
+
+    while (didSwap) {
+      // jika masih ada yang dituker
+      didSwap = false; // reset flag jadi false terlebih dahulu
+      i = 0; // mulai dari index 0
+      while (i < (arr.length - jarak)) {
+        // loop sampe akhir array - jarak
+        if (arr[i] > arr[i + jarak]) {
+          // jika nilai sekarang lebih besar dari nilai+jarak
+          temp = arr[i]; // tuker posisinya pakai variabel temp
+          arr[i] = arr[i + jarak];
+          arr[i + jarak] = temp;
+          didSwap = true; // bagian ini memberi tahu kalau ada yang ditukar
+        }
+        i++; // perulangan proses ke index berikutnya
+      }
+    }
+  }
+}
+
+// Ini fungsi untuk mengurutkan angka dari besar ke kecil
+// Sama seperti yang ascending, cuma beda di tanda perbandingannya
+void shellSortDescending(List<int> arr) {
+  int i, jarak;
+  bool didSwap = true;
+  int temp;
+  jarak = arr.length;
+
+  while (jarak > 1) {
+    jarak = (jarak ~/ 2);
     didSwap = true;
-    
+
     while (didSwap) {
       didSwap = false;
       i = 0;
       while (i < (arr.length - jarak)) {
-        // Membandingkan elemen dengan jarak tertentu
-        // Jika elemen kiri lebih besar dari elemen kanan, tukar posisinya
-        if (arr[i].compareTo(arr[i + jarak]) > 0) {
+        if (arr[i] < arr[i + jarak]) {
+          // perbedaannya di sini, memakai < bukan >
           temp = arr[i];
           arr[i] = arr[i + jarak];
           arr[i + jarak] = temp;
-          didSwap = true; // Menandai bahwa terjadi pertukaran
+          didSwap = true;
         }
         i++;
       }
@@ -31,77 +62,47 @@ void shellSortAscending<T extends Comparable<T>>(List<T> arr) {
   }
 }
 
-// Fungsi untuk mengurutkan list secara descending (dari besar ke kecil)
-// Menggunakan generic type T yang extends Comparable untuk memastikan elemen dapat dibandingkan
-void shellSortDescending<T extends Comparable<T>>(List<T> arr) {
-  int i, jarak;
-  bool didSwap = true; // Penanda apakah terjadi pertukaran
-  T temp;
-  jarak = arr.length; // Inisialisasi jarak dengan panjang array
-  
-  while (jarak > 1) {
-    // Mengurangi jarak dengan membagi 2 dan dibulatkan ke bawah
-    jarak = (jarak / 2).floor();
-    didSwap = true;
-    
-    while (didSwap) {
-      didSwap = false;
-      i = 0;
-      while (i < (arr.length - jarak)) {
-        // Membandingkan elemen dengan jarak tertentu
-        // Jika elemen kiri lebih kecil dari elemen kanan, maka tukar posisinya
-        if (arr[i].compareTo(arr[i + jarak]) < 0) {
-          temp = arr[i];
-          arr[i] = arr[i + jarak];
-          arr[i + jarak] = temp;
-          didSwap = true; // Menandai bahwa terjadi pertukaran
-        }
-        i++;
-      }
-    }
+// Fungsi untuk menampilkan isi array
+void display(List<int> data) {
+  for (int objek in data) {
+    // loop setiap angka di array
+    stdout.write('$objek '); // print angka dengan dengan ditamabh spasi
   }
-}
-
-// Fungsi untuk menampilkan isi list
-// Menggunakan generic type T agar dapat menampilkan berbagai tipe data
-void display<T>(List<T> data) {
-  for (T objek in data) {
-    stdout.write('$objek '); // Menampilkan setiap elemen diikuti spasi
-  }
-  print(''); // Membuat baris baru setelah menampilkan semua elemen
+  print(''); // membuat baris baru
 }
 
 void main() {
-  // Meminta input dari user untuk memilih mode pengurutan (1 = Ascending, 2 = Descending)
+  // Meminta user memilih ascending atau descending
   stdout.write('Pilih mode yang dipilih(1 = Ascending, 2 = Descending): ');
-  String? input = stdin.readLineSync(); // Membaca input dari keyboard
-  int mode = int.parse(input ?? '1'); // Mengkonversi input string ke integer, default 1 jika null
-  
-  // Membuat list dengan 10 angka genap (2,4,6,8,10,12,14,16,18,20) kemudian diacak
-  List<num> data = List<num>.generate(10, (index) => (index + 1) * 2);
-  data.shuffle(); // Mengacak urutan elemen dalam list
-  
-  // Menampilkan data sebelum diurutkan
+  String? input = stdin.readLineSync(); // membaca input dari keyboard
+  int mode =
+      int.parse(input ?? '1'); // Mengubah string menjadi angka, kalo null pake 1
+
+  // membuat array dengan 10 angka genap (2,4,6,8,dst) lalu diacak
+  List<int> data = List<int>.generate(10, (index) => (index + 1) * 2);
+  data.shuffle();//menacakk array
+
+  // Print array sebelum diurutin
   print('Data Sebelum Pengurutan:');
   display(data);
 
-  // Mencatat waktu saat program memulai pengurutan
+  // mencatat waktu mulai
   DateTime start = DateTime.now();
-  
-  // Melakukan pengurutan berdasarkan mode yang dipilih
+
+  // memanggil fungsi sort sesuai mode yang dipilih
   if (mode == 1) {
-    shellSortAscending(data); // Mengurutkan secara ascending
+    shellSortAscending(data);
   } else {
-    shellSortDescending(data); // Mengurutkan secara descending
+    shellSortDescending(data);
   }
-  
-  // Menghitung waktu yang dibutuhkan untuk pengurutan
+
+  // menghitung berapa lama prosesnya
   Duration elapsedTime = DateTime.now().difference(start);
-  
-  // Menampilkan data setelah diurutkan
+
+  // Print hasil pengurutan
   print('Data Setelah Pengurutan:');
   display(data);
-  
-  // Menampilkan waktu yang dibutuhkan dalam millisecond
+
+  // Print berapa lama waktunya dalam millisecond
   print('Waktu: ${elapsedTime.inMilliseconds} ms');
 }
